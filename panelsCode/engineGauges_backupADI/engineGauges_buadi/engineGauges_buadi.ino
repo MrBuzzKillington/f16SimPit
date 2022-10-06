@@ -139,7 +139,16 @@ void onMaxPwrSwChange(unsigned int newValue)
 }
 DcsBios::IntegerBuffer maxPwrSwBuffer(0x4424, 0x0008, 3, onMaxPwrSwChange);
 
-
+DcsBios::LED lightEngFire(0x447a, 0x0008, 10);
+DcsBios::LED lightEngine(0x447a, 0x0010, 9);
+DcsBios::LED lightHydOilPress(0x447a, 0x0020, 13);
+DcsBios::LED lightHydOilPressLower(0x447a, 0x0020, 12);
+DcsBios::LED lightFlcs(0x447a, 0x0040, 6);
+DcsBios::LED lightDbuOn(0x447a, 0x0080, 11);
+DcsBios::LED lightToLdgConfig(0x447a, 0x0100, 4);
+DcsBios::LED lightToLdgConfigLower(0x447a, 0x0100, 7);
+DcsBios::LED lightOxyLow(0x447a, 0x0400, 8);
+DcsBios::LED lightCanopy(0x447a, 0x0200, 5);
 /*
  * 
  *   MAIN FUNCTIONS

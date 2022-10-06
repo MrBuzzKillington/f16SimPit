@@ -54,6 +54,11 @@ DcsBios::LED lightRwrSystest(0x4480, 0x0040, 42);
 DcsBios::Switch2Pos rwrUnknownShipBtn("RWR_UNKNOWN_SHIP_BTN", 44);
 DcsBios::LED lightRwrShipUnk(0x4480, 0x0020, 46);
 
+
+DcsBios::LED lightMasterCaution(0x447a, 0x0001, 14);
+DcsBios::Switch2Pos masterCaution("MASTER_CAUTION", 15);
+DcsBios::Switch2Pos fAckBtn("F_ACK_BTN", 16);
+DcsBios::Switch2Pos iffIdBtn("IFF_ID_BTN", 17);
 //
 //Sync the game with the buttons
 //
