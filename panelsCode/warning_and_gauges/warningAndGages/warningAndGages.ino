@@ -50,7 +50,7 @@ byte CurLedState_[] = {B00000000,B00000000,B00000000,B00000000};
  *  Stepper motor 
  */
 int x27MaxStep_= 600;
-int x27MaxStpSpeed_ = 40;
+int x27MaxStpSpeed_ = 10;
 
 int fuelFR_ = 0;
 int fuelAL_ = 0;
