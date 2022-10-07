@@ -163,6 +163,18 @@ void setup()
 {
 
   setupSteppers();
+
+
+ pinMode(4, OUTPUT);
+ pinMode(5, OUTPUT);
+ pinMode(6, OUTPUT);
+ pinMode(7, OUTPUT);
+ pinMode(8, OUTPUT);
+ pinMode(9, OUTPUT);
+ pinMode(10, OUTPUT);
+ pinMode(11, OUTPUT);
+ pinMode(12, OUTPUT);
+ pinMode(13, OUTPUT);
  
   powerOnTest();
 
@@ -181,6 +193,42 @@ void loop()
 
 void powerOnTest()
 {
+
+ digitalWrite(4, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(100);    
+  digitalWrite(5, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(100);  
+  digitalWrite(6, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(100);  
+  digitalWrite(7, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(100);  
+   digitalWrite(8, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(100); 
+ digitalWrite(9, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(100); 
+ digitalWrite(10, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(100); 
+ digitalWrite(11, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(100); 
+ digitalWrite(12, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(100); 
+ digitalWrite(13, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(100); 
+
+  // wait for a second
+  digitalWrite(4, LOW);    // turn the LED off by making the voltage LOW
+  digitalWrite(5, LOW);    // turn the LED off by making the voltage LOW
+  digitalWrite(6, LOW);    // turn the LED off by making the voltage LOW
+  digitalWrite(7, LOW);    // turn the LED off by making the voltage LOW
+  digitalWrite(8, LOW);    // turn the LED off by making the voltage LOW
+  digitalWrite(9, LOW);    // turn the LED off by making the voltage LOW
+  digitalWrite(10, LOW);    // turn the LED off by making the voltage LOW
+  digitalWrite(11, LOW);    // turn the LED off by making the voltage LOW
+  digitalWrite(12, LOW);    // turn the LED off by making the voltage LOW
+  digitalWrite(13, LOW);    // turn the LED off by making the voltage LOW
+  delay(100);     
+
+  
 //    //HomeStepper(OilStepper_); //Home the stepper
     StepTo( OilStepper_, 0 , x27MaxStep_);
     oilPressureCurStp_ = HomeStepper(OilStepper_); //Home the stepper  
