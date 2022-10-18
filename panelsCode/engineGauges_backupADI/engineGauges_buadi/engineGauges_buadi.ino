@@ -149,6 +149,11 @@ DcsBios::LED lightToLdgConfig(0x447a, 0x0100, 4);
 DcsBios::LED lightToLdgConfigLower(0x447a, 0x0100, 7);
 DcsBios::LED lightOxyLow(0x447a, 0x0400, 8);
 DcsBios::LED lightCanopy(0x447a, 0x0200, 5);
+
+DcsBios::LED lightDisc(0x447c, 0x0010, 14);
+DcsBios::LED lightArNws(0x447c, 0x0008, 15);
+DcsBios::LED lightRdy(0x447c, 0x0004, 16);
+
 /*
  * 
  *   MAIN FUNCTIONS

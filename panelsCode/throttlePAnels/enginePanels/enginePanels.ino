@@ -47,7 +47,7 @@ DcsBios::Switch3Pos abResetSw("AB_RESET_SW", 19, 20);
 DcsBios::Switch2Pos engContSwCover("ENG_CONT_SW_COVER", 18);
 DcsBios::Switch2Pos engContSw("ENG_CONT_SW", 18,false,150);  //delay 100ms
 DcsBios::Switch2Pos engContSwCover2("ENG_CONT_SW_COVER", 18,false,200);//dealy50ms
-DcsBios::Switch2Pos maxPwrSw("MAX_PWR_SW", 53);
+DcsBios::Switch2Pos maxPwrSw("MAX_PWR_SW", 21);
 
 //
 //Read back the brightness for the LEDS

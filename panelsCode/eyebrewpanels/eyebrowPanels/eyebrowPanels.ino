@@ -54,11 +54,18 @@ DcsBios::LED lightRwrSystest(0x4480, 0x0040, 42);
 DcsBios::Switch2Pos rwrUnknownShipBtn("RWR_UNKNOWN_SHIP_BTN", 44);
 DcsBios::LED lightRwrShipUnk(0x4480, 0x0020, 46);
 
+DcsBios::LED lightAoaDn(0x447a, 0x2000, 52);
+DcsBios::LED lightAoaMid(0x447a, 0x1000, 50);
+DcsBios::LED lightAoaUp(0x447a, 0x0800, 48);
 
 DcsBios::LED lightMasterCaution(0x447a, 0x0001, 14);
 DcsBios::Switch2Pos masterCaution("MASTER_CAUTION", 15);
 DcsBios::Switch2Pos fAckBtn("F_ACK_BTN", 16);
 DcsBios::Switch2Pos iffIdBtn("IFF_ID_BTN", 17);
+
+int ledForSimSinc = 14;
+DcsBios::LED lightEcm(0x4544, 0x4000, 23);
+
 //
 //Sync the game with the buttons
 //
@@ -87,43 +94,43 @@ void PollAllControls()
 
 
 unsigned long uLastModelTimeS = 0xFFFFFFFF; // Start big, to ensure the first step triggers a resync
-
-void onModTimeChange(char* newValue) {
-  unsigned long currentModelTimeS = atol(newValue);
-
-  if( currentModelTimeS < uLastModelTimeS )
-  {
-    if( currentModelTimeS > 20 )// Delay to give time for DCS to finish loading and become stable and responsive
-    {
-      //PollAllControls(); 
-        digitalWrite(23, HIGH);
-        delay(150);
-        digitalWrite(23, LOW);
-        delay(150);
-        digitalWrite(23, HIGH);
-        delay(150);
-        digitalWrite(23, LOW);
-        
-      DcsBios::resetAllStates();
-      uLastModelTimeS = currentModelTimeS;
-    }
-  }
-  else
-  {
-    uLastModelTimeS = currentModelTimeS;
-  }
-}
-DcsBios::StringBuffer<6> modTimeBuffer(0x0440, onModTimeChange);
+//
+//void onModTimeChange(char* newValue) {
+//  unsigned long currentModelTimeS = atol(newValue);
+//
+//  if( currentModelTimeS < uLastModelTimeS )
+//  {
+//    if( currentModelTimeS > 20 )// Delay to give time for DCS to finish loading and become stable and responsive
+//    {
+//      //PollAllControls(); 
+//        digitalWrite(23, HIGH);
+//        delay(150);
+//        digitalWrite(23, LOW);
+//        delay(150);
+//        digitalWrite(23, HIGH);
+//        delay(150);
+//        digitalWrite(23, LOW);
+//        
+//      DcsBios::resetAllStates();
+//      uLastModelTimeS = currentModelTimeS;
+//    }
+//  }
+//  else
+//  {
+//    uLastModelTimeS = currentModelTimeS;
+//  }
+//}
+//DcsBios::StringBuffer<6> modTimeBuffer(0x0440, onModTimeChange);
 
 
 void onMaxPwrSwChange(unsigned int newValue)
 {
     if (newValue == 1)
     {
-      digitalWrite(23, HIGH);
+      digitalWrite(ledForSimSinc, HIGH);  //need a new led for thsi!!
       PollAllControls();
     } else {
-      digitalWrite(23, LOW);
+      digitalWrite(ledForSimSinc, LOW);
     }
 }
 DcsBios::IntegerBuffer maxPwrSwBuffer(0x4424, 0x0008, 3, onMaxPwrSwChange);
@@ -170,7 +177,10 @@ void powerOnTest()
         pinMode(38, OUTPUT); //msllaunch light
         pinMode(42, OUTPUT); //systest light
         pinMode(46, OUTPUT); //ship light
-
+        pinMode(48, OUTPUT); //aoa
+        pinMode(50, OUTPUT); //aoa
+        pinMode(52, OUTPUT); //aoa
+                        
         int dlyTime = 100;
         digitalWrite(23, HIGH);
         delay(dlyTime);
@@ -211,5 +221,18 @@ void powerOnTest()
         digitalWrite(42, LOW);
         delay(dlyTime);
         digitalWrite(46, LOW);
+        delay(dlyTime);
+        //aoa
+        digitalWrite(48, HIGH);
+        delay(dlyTime);
+        digitalWrite(50, HIGH);
+        delay(dlyTime);
+        digitalWrite(52, HIGH);
+        delay(dlyTime);
+        digitalWrite(48, LOW);
+        delay(dlyTime);
+        digitalWrite(50, LOW);
+        delay(dlyTime);
+        digitalWrite(52, LOW);
         delay(dlyTime);
 }
