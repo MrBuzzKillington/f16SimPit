@@ -23,7 +23,7 @@ void initFuelLcd()
     display.setTextSize(3.8); // Draw 2X-scale text
     display.setTextColor(SSD1306_WHITE);
     display.setCursor(20, 7);;
-    display.println(F("F16 v1"));
+    display.println(F("F16 v2"));
     display.display();
     delay (2000);
     // Clear the buffer

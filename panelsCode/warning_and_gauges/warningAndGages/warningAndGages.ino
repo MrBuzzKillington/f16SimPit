@@ -2,12 +2,11 @@
  Warning PAnel and gauges on right side
  */
 #define DCSBIOS_IRQ_SERIAL
-#include <Servo.h>
-#include <Stepper.h>
 #include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+#include "x168EasyDriver.h"
 
 
 #include "DcsBios.h"
@@ -45,6 +44,8 @@ byte AllLedOn[] = {B11111111,B11111111,B11111111,B11111111};
 byte CurLedState_[] = {B00000000,B00000000,B00000000,B00000000};
 
 
+int oldMaxPwrState = 0;
+
 
 /*
  *  Stepper motor 
@@ -52,30 +53,38 @@ byte CurLedState_[] = {B00000000,B00000000,B00000000,B00000000};
 int x27MaxStep_= 600;
 int x27MaxStpSpeed_ = 10;
 
-int fuelFR_ = 0;
-int fuelAL_ = 0;
+int fuelFRCurStp_ = 0;
+int fuelALCurStp_ = 0;
 
-Stepper fuelALStepper_(x27MaxStep_, 37, 39, 41, 43);
-Stepper fuelFRStepper_(x27MaxStep_, 45, 47, 49, 51);
+
+x168EasyDriver fuelFRStepper_(43,41);
+x168EasyDriver fuelALStepper_(39,37);
+
 
 
 
 void onFuelFrChange(unsigned int newValue) 
 {
-    int newPos = map(newValue, 0, 65535, 0, x27MaxStep_);
-    if (newPos != fuelFR_)
+    //int newPos = map(newValue, 0, 65535, 0, x27MaxStep_);
+    long val100 = 54500;
+    long volStps = 1025;
+    int newPos = map(newValue, 0, val100, 0, volStps);
+    if (newPos != fuelFRCurStp_)
     {
-        fuelFR_ = StepTo( fuelFRStepper_ , fuelFR_, newPos);  
+        fuelFRCurStp_ = fuelFRStepper_.gotoPosition( newPos );  
     }
 }
 DcsBios::IntegerBuffer fuelFrBuffer(0x44ec, 0xffff, 0, onFuelFrChange);
 
 
 void onFuelAlChange(unsigned int newValue) {
-    int newPos = map(newValue, 0, 65535, 0, x27MaxStep_);
-    if (newPos != fuelAL_)
+    //int newPos = map(newValue, 0, 65535, 0, x27MaxStep_);
+    long val100 = 54500; //0, 51000, 0, 466
+    long volStps = 1010;//340;
+    int newPos = map(newValue, 0, val100, 0, volStps);
+    if (newPos != fuelALCurStp_)
     {
-        fuelAL_ = StepTo( fuelALStepper_ , fuelAL_, newPos);  
+        fuelALCurStp_ = fuelALStepper_.gotoPosition( newPos );  
     }
 }
 DcsBios::IntegerBuffer fuelAlBuffer(0x44ea, 0xffff, 0, onFuelAlChange);
@@ -136,8 +145,12 @@ void setup()
 {
  
   setupWarning();
-  setupSteppers();
   initFuelLcd();
+
+  fuelFRCurStp_ = fuelFRStepper_.homeStepper(); //Home the stepper   
+ fuelALCurStp_ = fuelALStepper_.homeStepper(); //Home the stepper 
+  powerOnTest();
+  
   analogWrite( consolePwmPout_, consoleOutLevel_); //pwm to drive the lights
   analogWrite( floodPwmPout_, floodOutLevel_); //pwm to drive the lights
 
@@ -157,23 +170,34 @@ void loop()
  *   This code resysncs the pit when a game enters
  * 
  */
-unsigned long uLastModelTimeS = 0xFFFFFFFF; // Start big, to ensure the first step triggers a resync
-
-void onModTimeChange(char* newValue) {
-  unsigned long currentModelTimeS = atol(newValue);
-
-  if( currentModelTimeS < uLastModelTimeS )
-  {
-    if( currentModelTimeS > 20 )// Delay to give time for DCS to finish loading and become stable and responsive
+void onMaxPwrSwChange(unsigned int newValue)
+{
+    if (newValue == 1 && oldMaxPwrState == 0)
     {
-      //PollAllControls(); 
+      oldMaxPwrState = 1;
       DcsBios::resetAllStates();
-      uLastModelTimeS = currentModelTimeS;
+      PollAllControls();
+
+      //Reset the steppers     
+      fuelFRCurStp_ = fuelFRStepper_.homeStepper(); //Home the stepper   
+      fuelALCurStp_ = fuelALStepper_.homeStepper(); //Home the stepper 
+  
+    } 
+    if (newValue == 0)
+    {
+      oldMaxPwrState = 0;
     }
-  }
-  else
-  {
-    uLastModelTimeS = currentModelTimeS;
-  }
 }
-DcsBios::StringBuffer<6> modTimeBuffer(0x0440, onModTimeChange);
+DcsBios::IntegerBuffer maxPwrSwBuffer(0x4424, 0x0008, 3, onMaxPwrSwChange);
+
+
+void powerOnTest()
+{
+  fuelFRCurStp_ = fuelFRStepper_.maxStepper(); //Home the stepper   
+  fuelALCurStp_ = fuelALStepper_.maxStepper(); //Home the stepper 
+
+  fuelFRCurStp_ = fuelFRStepper_.homeStepper(); //Home the stepper   
+  fuelALCurStp_ = fuelALStepper_.homeStepper(); //Home the stepper 
+
+
+}
