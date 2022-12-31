@@ -54,7 +54,8 @@ DcsBios::Switch2Pos airRefuelSw("AIR_REFUEL_SW", 17);
 
 //IFF switches are in seperate code file
 
-
+//Canopy Ejection
+DcsBios::Switch2Pos canopyJettThandle("CANOPY_JETT_THANDLE", A8,true);
 
 
 //Function that gets call over and over
