@@ -116,9 +116,8 @@ DcsBios::IntegerBuffer maxPwrSwBuffer(0x4424, 0x0008, 3, onMaxPwrSwChange);
 //
 void setup() 
 {
+  initBackLight();
   powerOnTest();
-  pinMode(consolePwmPout_, OUTPUT); //for the backlight
-  analogWrite( consolePwmPout_, consoleOutLevel_); //pwm to drive the lights
   DcsBios::setup();
 
  }
@@ -192,8 +191,20 @@ void powerOnTest()
         digitalWrite(26, LOW); //D
         delay(dlyTime);
         digitalWrite(28, LOW); //C
-        
+
+        analogWrite( consolePwmPout_, 0);
+        for (int i=0; i<255; i+=32)
+        {
+          analogWrite( consolePwmPout_, i);
+          delay(500);
+        }
+        delay(2000);
+        analogWrite( consolePwmPout_, consoleOutLevel_);
 }
 
-
+void initBackLight()
+{
+    pinMode(consolePwmPout_, OUTPUT); //for the backlight
+    analogWrite( consolePwmPout_, consoleOutLevel_); //pwm to drive the lights
+}
   
