@@ -14,6 +14,12 @@ unsigned int lastUpdateCounter_ = 0;
 unsigned int priorUpdateCounter_ = 0;
 bool lightsOut_ = false;
 
+unsigned long previousMillis_ = 0;        // will store last time LED was updated
+int consolePwmPout_ = 2;  //This assumes its on Pin2!
+byte consoleOutLevel_ = 0;
+
+
+
 /*
  * 
  *   Define All the buttons here
@@ -126,7 +132,8 @@ void setup()
   DcsBios::setup();
   initBackLight();
   initIFFSwitches();
-  
+  powerOnTest();
+    
 }
 
 void loop() {
@@ -164,3 +171,16 @@ void onModTimeChange(char* newValue) {
   }
 }
 DcsBios::StringBuffer<6> modTimeBuffer(0x0440, onModTimeChange);
+
+
+void powerOnTest()
+{
+        analogWrite( consolePwmPout_, 0);
+        for (int i=0; i<255; i+=32)
+        {
+          analogWrite( consolePwmPout_, i);
+          delay(500);
+        }
+        delay(1000);
+       // analogWrite( consolePwmPout_, consoleOutLevel_);
+}

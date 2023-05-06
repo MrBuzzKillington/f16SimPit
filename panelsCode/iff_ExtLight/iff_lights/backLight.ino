@@ -4,9 +4,7 @@
  * 
  * 
  */
-unsigned long previousMillis_ = 0;        // will store last time LED was updated
-int consolePwmPout_ = 2;  //This assumes its on Pin2!
-byte consoleOutLevel_ = 0;
+
 
 /*
  * 
