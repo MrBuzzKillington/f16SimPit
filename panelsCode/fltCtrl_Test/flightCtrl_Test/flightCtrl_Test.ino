@@ -199,7 +199,7 @@ void powerOnTest()
           delay(500);
         }
         delay(2000);
-        analogWrite( consolePwmPout_, consoleOutLevel_);
+       // analogWrite( consolePwmPout_, consoleOutLevel_);
 }
 
 void initBackLight()
