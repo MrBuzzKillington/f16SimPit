@@ -24,8 +24,8 @@ int average = 0;                // the average
 
   int engineOff = 30;//160; //100
   int engineIdle = 60; //190
-  int zeroThrotPos = 30;//60; //20
-  int fullThrotPos = 160;//180; //160
+  int zeroThrotPos = 350;//60; //20
+  int fullThrotPos = 650;//180; //160
   int calibrateEnable = 0;
 
 // Set to true to test "Auto Send" mode or false to test "Manual Send" mode.
@@ -67,6 +67,16 @@ void checkBtn (int pin, int butonID)
 }
 
 
+void checkEngineOFf(int encoderValue)
+{
+   if (encoderValue > engineOff)
+   {
+      Joystick.releaseButton(10);
+   } else {
+      Joystick.pressButton(10);
+   }
+}
+
 void setup() 
 {
 
@@ -91,7 +101,7 @@ void setup()
   
   Joystick.setBrakeRange(0, 1023);
   Joystick.setZAxisRange(0, 1023);
-  Joystick.setThrottleRange(128,1023);
+  Joystick.setThrottleRange(0,1023); //Why is this 128,1023
  
 
   
@@ -117,21 +127,31 @@ void loop()
    //other pots
    antennaValue =analogRead(antnPin);
    rangeValue = analogRead(rngPin);
-   throttleValue = analogRead(throtlePin); //Flight stick is inverted
+   throttleValue = analogRead(throtlePin); 
 
 
-   if (throttleValue >= 512)
-     {
-        throttleValue = throttleValue - 1024;
-     }
-     throttleValue = throttleValue + zeroThrotPos; //value at most negative position
-     
+   //if (throttleValue >= 512)
+   //  {
+   //     throttleValue = throttleValue - 1024;
+   //  }
+   //  throttleValue = throttleValue + zeroThrotPos; //value at most negative position
+
+
+     //Map the throttle and limit to 0->1024
      //We have set the zero point properly now streatch to 1024
      if (calibrateEnable == 0)
      {
-          throttleValue = map(throttleValue, 0, fullThrotPos, 0, 1023); 
+          throttleValue = map(throttleValue, zeroThrotPos, fullThrotPos, 0, 1023); 
      }
-     
+
+     if (throttleValue < 0)
+     {
+        throttleValue = 0;
+     }
+     if (throttleValue > 1023)
+     {
+        throttleValue = 1023;
+     }
 
 
 
@@ -170,6 +190,9 @@ void loop()
      throttleValue = 1023;
    }
 
+   checkEngineOFf(throttleValue);
+
+
     
    Joystick.setBrake(antennaValue);
    Joystick.setZAxis(rangeValue);
@@ -186,8 +209,8 @@ void loop()
    checkBtn(vhfPin2, 7);
    checkBtn(vhfPin3, 8);
    checkBtn(vhfPin4, 9);
-   checkBtn(offPin, 10);
-//   checkBtn(idlePin, 11);
+   //checkBtn(offPin, 10); ///This goes to the off switch button if we need it
+//   checkBtn(idlePin, 11); //This was turned off already
 
 
 
