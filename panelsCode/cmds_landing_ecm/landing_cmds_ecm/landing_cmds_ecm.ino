@@ -21,7 +21,7 @@ bool lastWheelLight1_;
 bool lastWheelLight2_;
 
 
-DcsBios::Switch2Pos emergStroreJett("EMERG_STRORE_JETT", 8);
+DcsBios::Switch2Pos emergStroreJett("EMERG_STORE_JETT", 8);
 DcsBios::Switch3Pos antiSkidSw("ANTI_SKID_SW", 9, 10);
 DcsBios::Switch2Pos hookSw("HOOK_SW", 14);
 
