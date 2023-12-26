@@ -96,7 +96,7 @@ void onMaxPwrSwChange(unsigned int newValue)
       oldMaxPwrState = 0;
     }
 }
-
+DcsBios::IntegerBuffer maxPwrSwBuffer(0x4424, 0x0008, 3, onMaxPwrSwChange);
 
 /*
  * 
